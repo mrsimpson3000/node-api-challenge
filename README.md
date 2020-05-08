@@ -40,13 +40,24 @@ Demonstrate your understanding of this Sprint's concepts by answering the follow
 
 - [ ] Mention two parts of Express that you learned about this week.
 
+  It is a JS framework that sits on top of the NodeJS Web Server
+  Adds extra functionality like routing, middleware and a more elegant API
+
 - [ ] Describe Middleware?
+
+      Functions that get req and res (the homies) and can do something with them and can move them on to other middleware or return a response
 
 - [ ] Describe a Resource?
 
+      Think of resources as nouns like images, css, JS (a list of data).
+
 - [ ] What can the API return to help clients know if a request was successful?
 
+      A response with a status code and some json or a message.
+
 - [ ] How can we partition our application into sub-applications?
+
+      Using routing we can break our API into smaller files to make it more manageable.
 
 ## Minimum Viable Product
 
