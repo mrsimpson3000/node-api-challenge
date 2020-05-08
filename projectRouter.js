@@ -80,11 +80,28 @@ router.post("/", validateProject, (req, res) => {
     })
     .catch((error) => {
       console.log(error);
+      res.status(500).json({
+        error:
+          "There was an error while trying to save the project to the database.",
+      });
+    });
+});
+
+// Adds a new action to an existing project
+router.post("/:id/actions", validateProjectId, validateAction, (req, res) => {
+  Actions.insert({
+    ...req.body,
+    project_id: req.params.id,
+  })
+    .then((action) => {
+      res.status(200).json(action);
+    })
+    .catch((error) => {
+      console.log(error);
       res
         .status(500)
         .json({
-          error:
-            "There was an error while trying to save the project to the database.",
+          error: "There was an error while saving the action to the db.",
         });
     });
 });
@@ -109,6 +126,19 @@ function validateProject(req, res, next) {
     res.status(400).json({ error: "Missing project data." });
   } else if (!req.body.name || !req.body.description) {
     res.status(400).json({ error: "You must provide a name and description." });
+  } else {
+    next();
+  }
+}
+
+// Validate body of action and check that it includes a description, and notes
+function validateAction(req, res, next) {
+  if (!req.body) {
+    res.status(400).json({ error: "Missing action data." });
+  } else if (!req.body.description || !req.body.notes) {
+    res.status(400).json({
+      error: "You must provide a description and some notes.",
+    });
   } else {
     next();
   }
