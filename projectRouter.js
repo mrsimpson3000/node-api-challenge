@@ -60,17 +60,32 @@ router.get("/:id/actions", validateProjectId, (req, res) => {
 router.delete("/:id", validateProjectId, (req, res) => {
   Projects.remove(req.params.id)
     .then((qty) => {
-      res
-        .status(200)
-        .json({
-          message: `Deleted ${qty} record with the id of ${req.params.id}`,
-        });
+      res.status(200).json({
+        message: `Deleted ${qty} record with the id of ${req.params.id}`,
+      });
     })
     .catch((error) => {
       console.log(error);
       res
         .status(500)
         .json({ error: "The specified project could not be deleted." });
+    });
+});
+
+// Posts new project to db and returns newly created project
+router.post("/", validateProject, (req, res) => {
+  Projects.insert(req.body)
+    .then((project) => {
+      res.status(200).json(project);
+    })
+    .catch((error) => {
+      console.log(error);
+      res
+        .status(500)
+        .json({
+          error:
+            "There was an error while trying to save the project to the database.",
+        });
     });
 });
 
@@ -86,6 +101,17 @@ function validateProjectId(req, res, next) {
       console.log(error);
       res.status(400).json({ error: "Invalid project id." });
     });
+}
+
+// Validate body of project is present and that the body has a name and description
+function validateProject(req, res, next) {
+  if (!req.body) {
+    res.status(400).json({ error: "Missing project data." });
+  } else if (!req.body.name || !req.body.description) {
+    res.status(400).json({ error: "You must provide a name and description." });
+  } else {
+    next();
+  }
 }
 
 module.exports = router;
