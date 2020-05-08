@@ -41,6 +41,25 @@ router.get("/:id", validateProjectId, (req, res) => {
     });
 });
 
+// Get project by id and return project and all actions associated with project
+router.get("/:id/actions", validateProjectId, (req, res) => {
+  Projects.get(req.params.id)
+    .then((project) => {
+      res.status(200).json(project);
+    })
+    .catch((error) => {
+      console.log(error);
+      res
+        .status(500)
+        .json({
+          error:
+            "The actions for the requested project could not be returned from the database.",
+        });
+    });
+});
+
+// Delete project
+
 // Custom Middleware
 // Validate project id
 function validateProjectId(req, res, next) {
