@@ -13,13 +13,46 @@ router.get("/", (req, res) => {
     })
     .catch((error) => {
       console.log(error);
-      res
-        .status(500)
-        .json({
-          error:
-            "The projects information could not be returned from the database.",
-        });
+      res.status(500).json({
+        error:
+          "The projects information could not be returned from the database.",
+      });
     });
 });
+
+// Get project by id
+router.get("/:id", validateProjectId, (req, res) => {
+  Projects.get(req.params.id)
+    .then((project) => {
+      let info = {
+        id: project.id,
+        name: project.name,
+        description: project.description,
+        completed: project.completed,
+      };
+      res.status(200).json(info);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({
+        error:
+          "The project information could not be returned from the database.",
+      });
+    });
+});
+
+// Custom Middleware
+// Validate project id
+function validateProjectId(req, res, next) {
+  Projects.get(req.params.id)
+    .then((project) => {
+      req.project = project;
+      next();
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(400).json({ error: "Invalid project id." });
+    });
+}
 
 module.exports = router;
