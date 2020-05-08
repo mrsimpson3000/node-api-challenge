@@ -49,16 +49,30 @@ router.get("/:id/actions", validateProjectId, (req, res) => {
     })
     .catch((error) => {
       console.log(error);
-      res
-        .status(500)
-        .json({
-          error:
-            "The actions for the requested project could not be returned from the database.",
-        });
+      res.status(500).json({
+        error:
+          "The actions for the requested project could not be returned from the database.",
+      });
     });
 });
 
-// Delete project
+// Delete project and returns a message
+router.delete("/:id", validateProjectId, (req, res) => {
+  Projects.remove(req.params.id)
+    .then((qty) => {
+      res
+        .status(200)
+        .json({
+          message: `Deleted ${qty} record with the id of ${req.params.id}`,
+        });
+    })
+    .catch((error) => {
+      console.log(error);
+      res
+        .status(500)
+        .json({ error: "The specified project could not be deleted." });
+    });
+});
 
 // Custom Middleware
 // Validate project id
