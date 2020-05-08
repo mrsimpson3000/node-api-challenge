@@ -43,7 +43,7 @@ router.get("/:id", validateProjectId, (req, res) => {
 
 // Get project by id and return project and all actions associated with project
 router.get("/:id/actions", validateProjectId, (req, res) => {
-  Projects.get(req.params.id)
+  Projects.getProjectActions(req.params.id)
     .then((project) => {
       res.status(200).json(project);
     })
@@ -98,11 +98,21 @@ router.post("/:id/actions", validateProjectId, validateAction, (req, res) => {
     })
     .catch((error) => {
       console.log(error);
-      res
-        .status(500)
-        .json({
-          error: "There was an error while saving the action to the db.",
-        });
+      res.status(500).json({
+        error: "There was an error while saving the action to the db.",
+      });
+    });
+});
+
+// Updates a project and returns updated project
+router.put("/:id", validateProjectId, validateProject, (req, res) => {
+  Projects.update(req.params.id, req.body)
+    .then((update) => {
+      res.status(200).json(update);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({ error: "Could not update the project." });
     });
 });
 
